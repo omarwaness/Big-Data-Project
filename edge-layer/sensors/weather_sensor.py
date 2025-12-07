@@ -11,7 +11,7 @@ BASE_URL = os.getenv("GATEWAY_BASE_URL")
 GATEWAY_URL = BASE_URL + "/weather"
 
 # OpenWeather API details
-COUNTRY = "Tunis"
+COUNTRY = os.getenv("LOCATION")
 API_KEY = os.getenv("API_KEY_OPENWEATHER")
 WEATHER_URL = os.getenv("WEATHER_ENDPOINT_OPENWEATHER") + f"?q={COUNTRY}&appid={API_KEY}&units=metric"
 
