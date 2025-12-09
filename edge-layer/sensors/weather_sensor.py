@@ -4,6 +4,7 @@ import requests
 import time
 from datetime import datetime
 
+
 load_dotenv()
 
 # Gateway URL
@@ -15,43 +16,37 @@ COUNTRY = os.getenv("LOCATION")
 API_KEY = os.getenv("API_KEY_OPENWEATHER")
 WEATHER_URL = os.getenv("WEATHER_ENDPOINT_OPENWEATHER") + f"?q={COUNTRY}&appid={API_KEY}&units=metric"
 
-def generate_weather_data():
+
+def fetch_full_weather_data():
+    """Fetch full raw OpenWeather response."""
     try:
         resp = requests.get(WEATHER_URL, timeout=5)
         resp.raise_for_status()
-        weather = resp.json()
-
-        data = {
-            "temperature": weather["main"]["temp"],
-            "humidity": weather["main"]["humidity"],
-            "wind_speed": weather["wind"]["speed"],
-            "rainfall": weather.get("rain", {}).get("1h", 0)
-        }
 
         return {
-            "timestamp": int(time.time()),
-            "data": data
+            "timestamp": datetime.utcnow().isoformat(),
+            "raw_weather": resp.json()
         }
+
     except Exception as e:
         print("❌ Failed to fetch weather data:", e)
         return None
 
-def main():
-    print("Gateway URL:", GATEWAY_URL)
-    print("🌤️ Weather Sensor Started...")
+
+def run_weather_sensor():
+    print("🌤️ Weather Sender Started...")
+    #print("Gateway URL:", GATEWAY_URL)
 
     while True:
-        weather_payload = generate_weather_data()
-        if weather_payload:
+        payload = fetch_full_weather_data()
+
+        if payload:
             try:
-                response = requests.post(GATEWAY_URL, json=weather_payload, timeout=5)
-                print("Sent:", weather_payload, "| Gateway Status:", response.json())
+                response = requests.post(GATEWAY_URL, json=payload, timeout=5)
+                print("Sent full weather payload | Gateway response:", response.json())
             except Exception as e:
-                print("❌ Failed to send data:", e)
+                print("❌ Failed to send weather data:", e)
         else:
             print("⚠️ Skipping sending due to fetch error.")
 
         time.sleep(5)
-
-if __name__ == "__main__":
-    main()
