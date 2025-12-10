@@ -68,7 +68,7 @@ project-root/
 └── README.md
 ```
 
-## Edge Layer
+## Getting Started Edge Layer
 
 ### Prerequisites
 
@@ -78,32 +78,29 @@ project-root/
 
 The easiest way to spin up the entire stack is using the main Docker Compose file:
 
-Open a terminal and run these commands:
+Open a terminal and run this command in the root of the project:
 
 ```bash
-cd .\edge-layer\
-
-.\venv\Scripts\activate
-
-cd .\gateway\
-
-uvicorn main:app --reload
-```
-Open a second terminal and run these commands:
-```bash
-cd .\edge-layer\
-
-.\venv\Scripts\activate
-
-cd .\sensors\
-
-python .\weather_sensor.py
+docker compose up --build
 ```
 
 You should see something like this in the terminal
 ```bash
-🌤️ Weather Sensor Started...
-Sent: {'timestamp': 1765130008, 'data': {'temperature': 16.17, 'humidity': 47, 'wind_speed': 3.88, 'rainfall': 0}} | Gateway Status: {'message': 'Data received', 'processed': {'timestamp': 1765130008, 'temperature': 16.17, 'humidity': 47.0, 'wind_speed': 3.88, 'rainfall': 0.0, 'status': 'ok'}}
+✔ Service gateway          Built                                                                                                               13.6s 
+ ✔ Service sensors          Built                                                                                                                8.2s 
+ ✔ Network bigdata_default  Created                                                                                                              0.6s 
+ ✔ Container gateway        Created                                                                                                              1.8s 
+ ✔ Container sensors        Created                                                                                                              1.2s 
+Attaching to gateway, sensors
+gateway  | INFO:     Started server process [1]
+gateway  | INFO:     Waiting for application startup.
+gateway  | INFO:     Application startup complete.                                                                                                    
+gateway  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)                                                                    
+sensors  | 🚀 Starting all sensors...
+sensors  | 
+sensors  | 🌤️   Weather Sender Started...
+sensors  | ☁️   Forecast Sensor Started...                                                                                                             
+sensors  | 🌱  Soil Sensor Started...
 ```
 
 

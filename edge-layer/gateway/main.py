@@ -1,30 +1,47 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Dict
+from models import CurrentWeather
+from models import WeatherForecast
+from models import SoilData
 
 app = FastAPI()
 
-class WeatherInnerData(BaseModel):
-    temperature: float
-    humidity: float
-    wind_speed: float
-    rainfall: float
-
-class WeatherData(BaseModel):
-    timestamp: int
-    data: WeatherInnerData
 
 @app.post("/sensor/weather")
-def receive_weather_data(payload: WeatherData):
-    print("📥 Received Weather Data:", payload.dict())
+def receive_weather_data(payload: CurrentWeather):
+    print("📥 Received WEATHER:", payload.timestamp)
+    
+    data = payload.dict()
 
-    processed = {
-        "timestamp": payload.timestamp,
-        "temperature": payload.data.temperature,
-        "humidity": payload.data.humidity,
-        "wind_speed": payload.data.wind_speed,
-        "rainfall": payload.data.rainfall,
+    return {
+        "message": "Weather received",
+        "data": data,
         "status": "ok"
     }
 
-    return {"message": "Data received", "processed": processed}
+
+
+@app.post("/sensor/forecast")
+def receive_forecast_data(payload: WeatherForecast):
+    print("📥 Received FORECAST:", payload.timestamp)
+    
+    data = payload.dict()
+
+    return {
+        "message": "Forecast received",
+        "data": data,
+        "status": "ok"
+    }
+
+
+
+@app.post("/sensor/soil")
+def receive_soil_data(payload: SoilData):
+    print("📥 Received SOIL SENSOR:", payload.timestamp)
+    data = payload.dict()
+    data["status"] = "ok"
+
+    return {
+        "message": "Soil data received",
+        "data": data
+    }
+

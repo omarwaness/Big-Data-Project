@@ -45,7 +45,7 @@ def run_forecast_sensor():
     Ready to be called from main.py using a thread.
     """
     
-    print("☁️ Forecast Sensor Started...")
+    print("☁️   Forecast Sensor Started...")
     #print("Gateway URL:", GATEWAY_URL)
 
     while True:
@@ -54,7 +54,7 @@ def run_forecast_sensor():
         if payload:
             try:
                 response = requests.post(GATEWAY_URL, json=payload, timeout=5)
-                print("📤 Sent forecast | Gateway:", response.json())
+                print(f"📤 Sent forecast | Gateway status: {response.status_code}")
             except Exception as e:
                 print("❌ Failed to send forecast data:", e)
         else:

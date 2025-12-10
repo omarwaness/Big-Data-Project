@@ -34,7 +34,7 @@ def fetch_full_weather_data():
 
 
 def run_weather_sensor():
-    print("🌤️ Weather Sender Started...")
+    print("🌤️   Weather Sender Started...")
     #print("Gateway URL:", GATEWAY_URL)
 
     while True:
@@ -43,7 +43,7 @@ def run_weather_sensor():
         if payload:
             try:
                 response = requests.post(GATEWAY_URL, json=payload, timeout=5)
-                print("Sent full weather payload | Gateway response:", response.json())
+                print("📤 Sent weather | Gateway status: ", response.status_code)
             except Exception as e:
                 print("❌ Failed to send weather data:", e)
         else:

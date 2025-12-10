@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  gateway:
+    build:
+      context: ./edge-layer/gateway
+    container_name: gateway
+    ports:
+      - "8000:8000"
+    restart: always
+
+  sensors:
+    build:
+      context: ./edge-layer/sensors
+    container_name: sensors
+    depends_on:
+      - gateway
+    environment:
+      GATEWAY_BASE_URL: "http://gateway:8000/sensor"
+    restart: always

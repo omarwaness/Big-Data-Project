@@ -1,0 +1,28 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: edge_gateway
+    ports:
+      - "8000:8000"
+    networks:
+      - edge-net
+
+  sensor:
+    build:
+      context: .
+      dockerfile: sensors/Dockerfile
+    container_name: edge_sensor
+    depends_on:
+      - gateway
+    env_file:
+      - sensors/.env
+    environment:
+      - GATEWAY_BASE_URL=http://gateway:8000/sensor
+    networks:
+      - edge-net
+
+networks:
+  edge-net:
+    driver: bridge

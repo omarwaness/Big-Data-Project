@@ -35,15 +35,15 @@ def generate_soil_reading():
 def run_soil_sensor():
     """Loop that continuously generates and sends soil readings."""
     
-    print("🌱 Soil Sensor Started...")
+    print("🌱  Soil Sensor Started...")
     #print("Gateway URL:", GATEWAY_URL)
 
     while True:
         reading = generate_soil_reading()
 
         try:
-            resp = requests.post(GATEWAY_URL, json=reading, timeout=5)
-            print("📤 Sent soil reading | Gateway:", resp.json())
+            response = requests.post(GATEWAY_URL, json=reading, timeout=5)
+            print("📤 Sent soil reading | Gateway status: ", response.status_code)
         except Exception as e:
             print("❌ Failed to send soil data:", e)
 

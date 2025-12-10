@@ -1,17 +1,18 @@
-# Use the FULL version (not slim)
-FROM python:3.11
+  # Use a lightweight Python image
+FROM python:3.11-slim
 
+# Set working directory inside the container
 WORKDIR /app
 
-# 1. Copy requirements from the root context
+# Copy only requirements first (for better caching)
 COPY requirements.txt .
 
-# 2. Install dependencies
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 3. Copy the CONTENTS of the sensors folder into /app
-COPY sensors/ .
+# Copy the sensor code
+COPY . .
 
-# 4. Run the sensor script
-# Make sure to run unbuffered so logs show up immediately
-CMD ["python", "-u", "weather_sensor.py"]
+# Run the soil sensor script
+# Replace "sensor.py" with your actual filename
+CMD ["python", "-u", "main_sensors.py"]
