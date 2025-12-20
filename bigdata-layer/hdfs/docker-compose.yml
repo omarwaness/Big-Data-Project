@@ -1,0 +1,39 @@
+services:
+  master:
+    image: csturm/hadoop-python:h3.2-p3.9.10-j11
+    container_name: hdfs-master
+    hostname: master
+    ports:
+      - "9870:9870"  # HDFS NameNode Web UI
+      - "9000:9000"  # HDFS RPC Communication
+    environment:
+      - ENSURE_NAMENODE_DIR=/tmp/hadoop-root/dfs/name
+      - HDFS_CONF_dfs_replication=1
+      - CORE_CONF_fs_defaultFS=hdfs://master:9000
+    volumes:
+      - namenode_data:/tmp/hadoop-root/dfs/name
+    networks:
+      - big-data-net
+
+  slave:
+    image: csturm/hadoop-python:h3.2-p3.9.10-j11
+    container_name: hdfs-slave
+    hostname: slave
+    depends_on:
+      - master
+    environment:
+      - HDFS_CONF_dfs_replication=1
+      - CORE_CONF_fs_defaultFS=hdfs://master:9000
+      - HDFS_CONF_dfs_datanode_address=0.0.0.0:9866
+    volumes:
+      - datanode_data:/tmp/hadoop-root/dfs/data
+    networks:
+      - big-data-net
+
+volumes:
+  namenode_data:
+  datanode_data:
+
+networks:
+  big-data-net:
+    external: true

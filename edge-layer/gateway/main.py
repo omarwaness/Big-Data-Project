@@ -8,7 +8,7 @@ app = FastAPI()
 
 @app.post("/sensor/weather")
 def receive_weather_data(payload: CurrentWeather):
-    print("📥 Received WEATHER:", payload.timestamp)
+    print("✔️ Received WEATHER:", payload.timestamp)
     
     data = payload.dict()
 
@@ -22,7 +22,7 @@ def receive_weather_data(payload: CurrentWeather):
 
 @app.post("/sensor/forecast")
 def receive_forecast_data(payload: WeatherForecast):
-    print("📥 Received FORECAST:", payload.timestamp)
+    print("✔️ Received FORECAST:", payload.timestamp)
     
     data = payload.dict()
 
@@ -36,7 +36,7 @@ def receive_forecast_data(payload: WeatherForecast):
 
 @app.post("/sensor/soil")
 def receive_soil_data(payload: SoilData):
-    print("📥 Received SOIL SENSOR:", payload.timestamp)
+    print("✔️ Received SOIL SENSOR:", payload.timestamp)
     data = payload.dict()
     data["status"] = "ok"
 

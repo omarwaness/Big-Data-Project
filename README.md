@@ -60,10 +60,7 @@ project-root/
 │   ├── frontend/               # Web application (Vite)
 │   └── mobile-app/             # (Optional) Mobile application
 │
-├── infra/                      # Infrastructure configuration
-│   ├── docker-compose-all.yml  # Main composition file
-│   ├── kubernetes-manifests/   # K8s deployment files
-│   └── monitoring/             # Grafana and Prometheus setup
+├── docker-compose.yml           # Main composition file
 │
 └── README.md
 ```
@@ -86,21 +83,11 @@ docker compose up --build
 
 You should see something like this in the terminal
 ```bash
-✔ Service gateway          Built                                                                                                               13.6s 
- ✔ Service sensors          Built                                                                                                                8.2s 
- ✔ Network bigdata_default  Created                                                                                                              0.6s 
- ✔ Container gateway        Created                                                                                                              1.8s 
- ✔ Container sensors        Created                                                                                                              1.2s 
-Attaching to gateway, sensors
-gateway  | INFO:     Started server process [1]
-gateway  | INFO:     Waiting for application startup.
-gateway  | INFO:     Application startup complete.                                                                                                    
-gateway  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)                                                                    
-sensors  | 🚀 Starting all sensors...
-sensors  | 
-sensors  | 🌤️   Weather Sender Started...
-sensors  | ☁️   Forecast Sensor Started...                                                                                                             
-sensors  | 🌱  Soil Sensor Started...
+[+] Running 4/4
+ ✔ Container gateway    Started                                                                                                            0.9s 
+ ✔ Container zookeeper  Started                                                                                                            1.0s 
+ ✔ Container sensors    Started                                                                                                            1.5s 
+ ✔ Container kafka      Started                                                                                                            1.6s 
 ```
 
 
