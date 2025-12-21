@@ -128,3 +128,6 @@ class SoilData(BaseModel):
     soil_moisture: float
     soil_ph: float
     soil_temp_c: float
+
+
+

@@ -8,31 +8,47 @@ services:
       - "9000:9000"  # HDFS RPC Communication
     environment:
       - ENSURE_NAMENODE_DIR=/tmp/hadoop-root/dfs/name
-      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_replication=2  # Increased replication to 2 for the 2 slaves
       - CORE_CONF_fs_defaultFS=hdfs://master:9000
     volumes:
       - namenode_data:/tmp/hadoop-root/dfs/name
     networks:
       - big-data-net
 
-  slave:
+  slave-1:
     image: csturm/hadoop-python:h3.2-p3.9.10-j11
-    container_name: hdfs-slave
-    hostname: slave
+    container_name: slave-1
+    hostname: slave-1
     depends_on:
       - master
     environment:
-      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_replication=2
       - CORE_CONF_fs_defaultFS=hdfs://master:9000
       - HDFS_CONF_dfs_datanode_address=0.0.0.0:9866
     volumes:
-      - datanode_data:/tmp/hadoop-root/dfs/data
+      - datanode_data_1:/tmp/hadoop-root/dfs/data
+    networks:
+      - big-data-net
+
+  slave-2:
+    image: csturm/hadoop-python:h3.2-p3.9.10-j11
+    container_name: slave-2
+    hostname: slave-2
+    depends_on:
+      - master
+    environment:
+      - HDFS_CONF_dfs_replication=2
+      - CORE_CONF_fs_defaultFS=hdfs://master:9000
+      - HDFS_CONF_dfs_datanode_address=0.0.0.0:9866
+    volumes:
+      - datanode_data_2:/tmp/hadoop-root/dfs/data
     networks:
       - big-data-net
 
 volumes:
   namenode_data:
-  datanode_data:
+  datanode_data_1:
+  datanode_data_2:
 
 networks:
   big-data-net:
