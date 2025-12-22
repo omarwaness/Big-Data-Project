@@ -64,6 +64,20 @@ class CurrentWeather(BaseModel):
     raw_weather: WeatherResponse
 
 
+class CleanWeather(BaseModel):
+    timestamp: datetime
+    description: str
+
+    temp: float
+    temp_min: float
+    temp_max: float
+
+    pressure: int
+    humidity: int
+
+    wind_speed: float
+
+
 # -----------------------------
 # FORECAST
 # -----------------------------
@@ -82,6 +96,12 @@ class MainForecast(BaseModel):
 class SysForecast(BaseModel):
     pod: str  # "d" / "n"
 
+class Rain(BaseModel):
+    h3: Optional[float] = 0.0
+
+    class Config:
+        fields = {"h3": "3h"}  # maps JSON "3h" → model.h3
+
 
 class ForecastEntry(BaseModel):
     dt: int
@@ -91,6 +111,7 @@ class ForecastEntry(BaseModel):
     wind: Wind
     visibility: int
     pop: float
+    rain: Optional[Rain] = None
     sys: SysForecast
     dt_txt: str
 
@@ -116,6 +137,20 @@ class ForecastResponse(BaseModel):
 class WeatherForecast(BaseModel):
     timestamp: datetime
     raw_forecast: ForecastResponse
+
+class CleanForecastEntry(BaseModel):
+    dt_text: str
+    description: str
+
+    temp: float
+    humidity: int
+    wind_speed: float
+    rain: float
+
+
+class CleanForecast(BaseModel):
+    timestamp: datetime
+    readings: List[CleanForecastEntry]
 
 
 # -----------------------------
