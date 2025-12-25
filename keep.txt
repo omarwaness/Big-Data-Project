@@ -1,0 +1,49 @@
+
+import json
+from kafka import KafkaProducer
+
+# Use an environment variable or a configuration file for this!
+KAFKA_BOOTSTRAP_SERVERS = ['kafka:9092'] # Change this if using Docker
+
+producer = None
+
+def get_producer():
+    global producer
+    if producer is None:
+        try:
+            producer = KafkaProducer(
+                bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+                value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+                acks='all',
+                # Give it a bit more time to connect
+                request_timeout_ms=5000, 
+                reconnect_backoff_ms=1000
+            )
+        except Exception as e:
+            print(f"❌ Could not connect to Kafka: {e}")
+            return None
+    return producer
+
+
+def send_to_kafka(topic: str, data: dict):
+    """
+    Generic function to send a dictionary to a specific Kafka topic.
+    """
+    p = get_producer()
+    if p:
+        try:
+            p.send(topic, value=data)
+        except Exception as e:
+            print(f"❌ Error sending to {topic}: {e}")
+    else:
+        print(f"⚠️ Message dropped. Kafka producer not available.")
+
+
+
+def close_kafka_producer():
+    """
+    Flushes and closes the producer connection.
+    """
+    producer.flush()
+    producer.close()
+    print("Kafka Producer closed.")

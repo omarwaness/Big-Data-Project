@@ -14,12 +14,7 @@ consumer = KafkaConsumer(
 def process_location_updates():
     print("Waiting for location updates...")
     for message in consumer:
-        location = message.value
-        driver_id = location['driver_id']
-        latitude = location['latitude']
-        longitude = location['longitude']
-        timestamp = location['timestamp']
-        print(f"Received location update for Driver {driver_id}: ({latitude}, {longitude}) at {timestamp}")
+        print(f"Received: {message.value}")
 
 # Start consuming location updates
 process_location_updates()
