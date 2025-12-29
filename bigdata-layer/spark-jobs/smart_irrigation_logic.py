@@ -1,0 +1,1 @@
+# Cross-layer analysis: If Soil is dry AND Weather is hot/windy, calculate a "Watering Priority" score.

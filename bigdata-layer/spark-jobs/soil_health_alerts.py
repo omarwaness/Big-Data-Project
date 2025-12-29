@@ -1,0 +1,1 @@
+# Detects "Critical Moisture" levels (< 10%) and writes an alert to MongoDB for the frontend to display in red.

@@ -1,7 +1,8 @@
 include:
   - path: ./edge-layer/docker-compose.yml
   - path: ./kafka/docker-compose.yml
-  #- path: ./bigdata-layer/hdfs/docker-compose.yml
+  - path: ./bigdata-layer/hdfs/docker-compose.yml
+  - path: ./storage-layer/docker-compose.yml
 
 networks:
   big-data-net:

@@ -1,0 +1,1 @@
+# Look at the next 5 days. If frost ($<2^\circ C$) or heatwave ($>35^\circ C$) is predicted, flag it for crop protection.

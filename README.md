@@ -49,7 +49,7 @@ project-root/
 ├── bigdata-layer/
 │   ├── kafka/                  # Kafka configuration and topics
 │   ├── hdfs/                   # Raw and processed data storage
-│   ├── spark/                  # Spark jobs (Cleaning, ML, Stats) and utils
+│   ├── spark-jobs/             # Spark jobs (Cleaning, ML, Stats) and utils
 │   └── notebooks/              # Jupyter notebooks for EDA and experiments
 │
 ├── storage-layer/

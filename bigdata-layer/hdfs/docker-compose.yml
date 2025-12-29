@@ -5,11 +5,13 @@ services:
     hostname: master
     ports:
       - "9870:9870"  # HDFS NameNode Web UI
-      - "9000:9000"  # HDFS RPC Communication
+      - "8020:8020"  # Changed from 9000 to 8020
     environment:
       - ENSURE_NAMENODE_DIR=/tmp/hadoop-root/dfs/name
       - HDFS_CONF_dfs_replication=2  # Increased replication to 2 for the 2 slaves
-      - CORE_CONF_fs_defaultFS=hdfs://master:9000
+      - CORE_CONF_fs_defaultFS=hdfs://master:8020 # Changed to 8020
+      - HDFS_CONF_dfs_namenode_rpc_address=0.0.0.0:8020 # Force bind to all interfaces
+      - HDFS_CONF_dfs_support_append=true
     volumes:
       - namenode_data:/tmp/hadoop-root/dfs/name
     networks:
@@ -25,23 +27,57 @@ services:
       - HDFS_CONF_dfs_replication=2
       - CORE_CONF_fs_defaultFS=hdfs://master:9000
       - HDFS_CONF_dfs_datanode_address=0.0.0.0:9866
+      - HDFS_CONF_dfs_support_append=true
     volumes:
       - datanode_data_1:/tmp/hadoop-root/dfs/data
     networks:
       - big-data-net
 
-  slave-2:
-    image: csturm/hadoop-python:h3.2-p3.9.10-j11
-    container_name: slave-2
-    hostname: slave-2
+  hdfs-consumer:
+    build:
+      context: ../kafka
+      dockerfile: Dockerfile
+    container_name: hdfs-consumer
+    restart: always
     depends_on:
       - master
+      - kafka # Ensure this matches your kafka service name
+    networks:
+      - big-data-net
     environment:
-      - HDFS_CONF_dfs_replication=2
-      - CORE_CONF_fs_defaultFS=hdfs://master:9000
-      - HDFS_CONF_dfs_datanode_address=0.0.0.0:9866
+      - PYTHONUNBUFFERED=1
+
+  spark-master:
+    image: apache/spark:3.5.0-python3
+    container_name: spark-master
+    hostname: spark-master
+    user: root
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=8081
+    ports:
+      - "8081:8081" # Master Web UI
+      - "7077:7077" # Master RPC
     volumes:
-      - datanode_data_2:/tmp/hadoop-root/dfs/data
+      # Map your local spark-jobs folder to the container
+      - ../spark-jobs:/opt/spark/work-dir
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    networks:
+      - big-data-net
+
+  spark-worker:
+    image: apache/spark:3.5.0-python3
+    container_name: spark-worker
+    user: root
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      - SPARK_WORKER_WEBUI_PORT=8082
+    ports:
+      - "8082:8082" # Worker Web UI
+    depends_on:
+      - spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     networks:
       - big-data-net
 
