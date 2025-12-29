@@ -1,1 +1,1 @@
-# calculate averages
+# calculate averages per day
