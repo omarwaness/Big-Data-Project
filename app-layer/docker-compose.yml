@@ -1,0 +1,19 @@
+services:
+  farm-ui:
+    build:
+      context: ./smart-farm-ui
+      dockerfile: Dockerfile
+    container_name: smart-farm-ui
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Use the container name 'mongodb' as the hostname
+      - MONGODB_URI=mongodb://mongodb:27017/farm
+      - NODE_ENV=production
+    networks:
+      - big-data-net
+
+networks:
+  big-data-net:
+    external: true

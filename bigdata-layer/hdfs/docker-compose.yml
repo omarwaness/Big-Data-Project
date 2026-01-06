@@ -80,6 +80,19 @@ services:
     command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     networks:
       - big-data-net
+  
+  job-scheduler:
+    build:
+      context: ../scheduler
+      dockerfile: Dockerfile
+    container_name: job-scheduler
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Allows container to control other containers
+    depends_on:
+      - spark-master
+    networks:
+      - big-data-net
+    restart: always
 
 volumes:
   namenode_data:
