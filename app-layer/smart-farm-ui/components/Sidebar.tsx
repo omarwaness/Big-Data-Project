@@ -7,7 +7,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menuItems = [
-    { icon: <LayoutDashboard size={20}/>, label: 'Dashboard', href: '/' },
+    { icon: <LayoutDashboard size={20}/>, label: 'Dashboard', href: '/dashboard' },
     { icon: <Droplets size={20}/>, label: 'Irrigation', href: '/irrigation' },
     { icon: <CloudSun size={20}/>, label: 'Weather', href: '/weather' },
     { icon: <Thermometer size={20}/>, label: 'Soil Analysis', href: '/soil' },
